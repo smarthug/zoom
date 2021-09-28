@@ -24,7 +24,7 @@ wsServer.on("connection", socket => {
 
     socket.join(roomName);
     done();
-    socket.to(roomName).emit("welcome", socket.nickname)
+    
   })
   socket.on("disconnecting", () => {
     socket.rooms.forEach(room => socket.to(room).emit("bye", socket.nickname))
@@ -33,7 +33,12 @@ wsServer.on("connection", socket => {
     socket.to(room).emit("new_message", `${socket.nickname}: ${msg}`);
     done();
   })
-  socket.on("nickname", nickname => socket["nickname"] = nickname)
+  socket.on("nickname", (nickname,roomName,done) => {
+    console.log(nickname)
+    socket["nickname"] = nickname
+    socket.to(roomName).emit("welcome", socket.nickname)
+    done();
+  })
 })
 
 //const wss = new WebSocket.Server({ server });
