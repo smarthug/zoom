@@ -16,6 +16,9 @@ let cameraOff = false;
 let roomName;
 let myPeerConnection;
 
+
+let myTest;
+
 async function getCameras(){
   try{
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -112,12 +115,25 @@ socket.on("welcome",  async () => {
 
 socket.on("offer", offer => {
   console.log(offer);
-
+  console.log(offer.sdp)
+  // let fuck = offer.sdp
+  // console.log(fuck)
   let tmp = prompt()
-  console.log(offer.sdp === tmp)
+  // let result = tmp.replaceAll(/\n/g, "\r\n");
+  // console.log(offer.sdp === tmp.replaceAll(/\n/g, "\r\n"))
+  console.log(offer.sdp.replaceAll(/\n/g, "") == tmp.replaceAll(/\n/g, ""))
+  // myTest = offer
 })
 
+function tmpTest(){
+  let tmp = prompt()
+  let tmp2 = prompt()
+  console.log(tmp.replaceAll(/\n/g, "\r\n") == tmp2.replaceAll(/\n/g, "\r\n"))
+}
+
 /// RTC Code 
+document.getElementById("test").addEventListener("click", tmpTest);
+// document.createElement('button?')
 
 function makeConnection(){
   myPeerConnection = new RTCPeerConnection();
@@ -126,3 +142,4 @@ function makeConnection(){
 
 
 // === test ??
+
