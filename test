@@ -1,0 +1,50 @@
+v=0
+o=- 1364141567208105104 2 IN IP4 127.0.0.1
+s=-
+t=0 0
+a=group:BUNDLE 0 1
+a=extmap-allow-mixed
+a=msid-semantic: WMS FRA56jO8PKGCSUKznDtYsgUgsNNULMbCSRfu
+m=audio 9 UDP/TLS/RTP/SAVPF 111 103 104 9 0 8 106 105 13 110 112 113 126
+c=IN IP4 0.0.0.0
+a=rtcp:9 IN IP4 0.0.0.0
+a=ice-ufrag:srwK
+a=ice-pwd:a/YkViAMQ9swqQUnEXbB/u16
+a=ice-options:trickle
+a=fingerprint:sha-256 39:36:26:F4:A2:D3:49:9A:86:62:05:9B:6E:5D:94:AE:82:AE:5B:2E:29:E6:44:E0:3E:C0:E9:2A:12:74:B1:E0
+a=setup:actpass
+a=mid:0
+a=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level
+a=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time
+a=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01
+a=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid
+a=extmap:5 urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id
+a=extmap:6 urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id
+a=sendrecv
+a=msid:FRA56jO8PKGCSUKznDtYsgUgsNNULMbCSRfu 2ef4e61b-175c-4011-8980-a353c1dce8cc
+a=rtcp-mux
+a=rtpm...vel-id=4d001f
+a=rtpmap:119 rtx/90000
+a=fmtp:119 apt=124
+a=rtpmap:123 H264/90000
+a=rtcp-fb:123 goog-remb
+a=rtcp-fb:123 transport-cc
+a=rtcp-fb:123 ccm fir
+a=rtcp-fb:123 nack
+a=rtcp-fb:123 nack pli
+a=fmtp:123 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=64001f
+a=rtpmap:118 rtx/90000
+a=fmtp:118 apt=123
+a=rtpmap:114 red/90000
+a=rtpmap:115 rtx/90000
+a=fmtp:115 apt=114
+a=rtpmap:116 ulpfec/90000
+a=ssrc-group:FID 1647242089 4066668069
+a=ssrc:1647242089 cname:t96dhdXRlTzySMcs
+a=ssrc:1647242089 msid:FRA56jO8PKGCSUKznDtYsgUgsNNULMbCSRfu ddb9cf7f-d3ad-4fb4-b06c-b9d9dd1a9842
+a=ssrc:1647242089 mslabel:FRA56jO8PKGCSUKznDtYsgUgsNNULMbCSRfu
+a=ssrc:1647242089 label:ddb9cf7f-d3ad-4fb4-b06c-b9d9dd1a9842
+a=ssrc:4066668069 cname:t96dhdXRlTzySMcs
+a=ssrc:4066668069 msid:FRA56jO8PKGCSUKznDtYsgUgsNNULMbCSRfu ddb9cf7f-d3ad-4fb4-b06c-b9d9dd1a9842
+a=ssrc:4066668069 mslabel:FRA56jO8PKGCSUKznDtYsgUgsNNULMbCSRfu
+a=ssrc:4066668069 label:ddb9cf7f-d3ad-4fb4-b06c-b9d9dd1a9842
