@@ -116,7 +116,7 @@ socket.on("welcome", async () => {
 
 socket.on("offer", offer => {
   console.log(offer);
-  console.log(offer.sdp)
+  console.log(offer.sdp.length)
   // let fuck = offer.sdp
   // console.log(fuck)
   // let tmp = prompt("dont put", offer.sdp)
@@ -137,9 +137,11 @@ socket.on("offer", offer => {
 
 function tmpTest() {
  
-
-
-  console.log(document.getElementById("offer").value===document.getElementById("tmp").value)
+  let offer = document.getElementById("offer").value
+  let tmp = document.getElementById("tmp").value
+  console.log(offer.length)
+  console.log(tmp.length)
+  console.log(offer===tmp)
 }
 
 /// RTC Code 
