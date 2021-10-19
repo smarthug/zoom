@@ -17,9 +17,6 @@ let cameraOff = false;
 let roomName;
 let myPeerConnection;
 
-
-let myTest;
-
 async function getCameras() {
   try {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -29,7 +26,7 @@ async function getCameras() {
       const option = document.createElement("option");
       option.value = camera.deviceId;
       option.innerText = camera.label;
-      if(currentCamera.label === camera.label){
+      if (currentCamera.label === camera.label) {
         option.selected = true;
       }
       camerasSelect.appendChild(option);
@@ -50,7 +47,7 @@ async function getMedia(deviceId) {
   };
   try {
     myStream = await navigator.mediaDevices.getUserMedia(deviceId ? cameraConstraints : initialConstraints);
-    if(!deviceId){
+    if (!deviceId) {
       await getCameras();
     }
     myFace.srcObject = myStream;
@@ -99,7 +96,7 @@ cameraBtn.addEventListener("click", handleCameraClick);
 const welcome = document.getElementById("welcome")
 const welcomeForm = welcome.querySelector("form");
 
-async function startMedia() {
+async function initCall() {
   welcome.hidden = true;
   call.hidden = false;
   await getMedia();
@@ -107,67 +104,67 @@ async function startMedia() {
   makeConnection()
 }
 
-function handleWelcomeSubmit(event) {
+async function handleWelcomeSubmit(event) {
   event.preventDefault()
   const input = welcomeForm.querySelector("input")
-  socket.emit("join_room", input.value, startMedia)
+  await initCall()
+  socket.emit("join_room", input.value)
   roomName = input.value;
   input.value = ""
 }
 
 welcomeForm.addEventListener("submit", handleWelcomeSubmit)
-
+camerasSelect.addEventListener("input", handleCameraChange);
 // Socket Code
 
 socket.on("welcome", async () => {
   const offer = await myPeerConnection.createOffer();
   myPeerConnection.setLocalDescription(offer)
-  console.log(offer.sdp)
   console.log("sent the offer")
   socket.emit("offer", offer, roomName);
 
 })
 
-socket.on("offer", offer => {
-  console.log(offer);
-  console.log(offer.sdp.length)
-  // let fuck = offer.sdp
-  // console.log(fuck)
-  // let tmp = prompt("dont put", offer.sdp)
-  // let tmp = prompt("dont put", offer.sdp.replaceAll(/\r\n/g, ""))
-
-  // let result = tmp.replaceAll(/\n/g, "\r\n");
-  // console.log(offer.sdp.replaceAll(/[\r\n]/gm, "") === tmp.replaceAll(/[\r\n]/gm, ""))
-  // console.log(offer.sdp)
-  // console.log(tmp)
-  document.getElementById("offer").value = offer.sdp
-  // document.getElementById("tmp").value = tmp
-  // fs.writeFileSync("./offer.txt",offer.sdp)
-  // fs.writeFileSync("./tmp.txt",tmp)
-  // console.log(offer.sdp.replaceAll(/\n/g, "") == tmp.replaceAll(/\n/g, ""))
-  // console.log(offer.sdp===tmp)
-  // myTest = offer
+socket.on("offer", async offer => {
+  console.log("received the offer")
+  myPeerConnection.setRemoteDescription(offer);
+  const answer = await myPeerConnection.createAnswer();
+  myPeerConnection.setLocalDescription(answer)
+  socket.emit("answer", answer, roomName)
+  console.log("send the answer")
 })
 
-function tmpTest() {
- 
-  let offer = document.getElementById("offer").value
-  let tmp = document.getElementById("tmp").value
-  console.log(offer.length)
-  console.log(tmp.length)
-  console.log(offer===tmp)
-}
+socket.on("answer", answer => {
+  console.log("received the answer")
+  myPeerConnection.setRemoteDescription(answer);
+})
 
-/// RTC Code 
-document.getElementById("test").addEventListener("click", tmpTest);
-// document.createElement('button?')
+socket.on("ice", (ice) => {
+  console.log("received candidate")
+  myPeerConnection.addIceCandidate(ice);
+})
+
+
+/// RTC Code
 
 function makeConnection() {
   myPeerConnection = new RTCPeerConnection();
+  myPeerConnection.addEventListener("icecandidate", handleIce)
+  myPeerConnection.addEventListener("addstream", handleAddStream)
   myStream.getTracks().forEach(track => myPeerConnection.addTrack(track, myStream));
 }
 
+function handleIce(data) {
+  console.log("sent candidate")
+  socket.emit("ice", data.candidate, roomName)
+}
 
-// === test ??
+function handleAddStream(data){
+  // console.log("got an event from my peer")
+  // console.log("Peer's Stream",data.stream);
+  // console.log("myStream", myStream);
 
-camerasSelect.addEventListener("input", handleCameraChange);
+  const peerFace = document.getElementById("peerFace")
+  peerFace.srcObject = data.stream;
+}
+
