@@ -126,20 +126,23 @@ camerasSelect.addEventListener("input", handleCameraChange);
 
 socket.on("welcome", async () => {
   myDataChannel = myPeerConnection.createDataChannel("chat");
-  myDataChannel.addEventListener("message", (event) => { console.log(event.data) })
-  console.log("made data channel")
+  
   const offer = await myPeerConnection.createOffer();
+  console.log(offer)
   myPeerConnection.setLocalDescription(offer)
   console.log("sent the offer")
   socket.emit("offer", offer, roomName);
-
+  
+  myDataChannel.addEventListener("message", (event) => { console.log(event.data) })
 })
 
 socket.on("offer", async offer => {
   myPeerConnection.addEventListener("datachannel", event => {
+    console.log("it happend")
     myDataChannel = event.channel;
     myDataChannel.addEventListener("message", (event) => { console.log(event.data) })
   })
+
   console.log("received the offer")
   myPeerConnection.setRemoteDescription(offer);
   const answer = await myPeerConnection.createAnswer();
@@ -149,6 +152,7 @@ socket.on("offer", async offer => {
 })
 
 socket.on("answer", answer => {
+  
   console.log("received the answer")
   myPeerConnection.setRemoteDescription(answer);
 })
