@@ -16,6 +16,7 @@ let muted = false;
 let cameraOff = false;
 let roomName;
 let myPeerConnection;
+let myDataChannel;
 
 async function getCameras() {
   try {
@@ -85,7 +86,7 @@ function handleCameraClick() {
 
 async function handleCameraChange() {
   await getMedia(camerasSelect.value);
-  if(myPeerConnection){
+  if (myPeerConnection) {
     const videoTrack = myStream.getVideoTracks()[0]
     const videoSender = myPeerConnection.getSenders().find(sender => sender.track.kind === "video")
     videoSender.replaceTrack(videoTrack)
@@ -124,6 +125,9 @@ camerasSelect.addEventListener("input", handleCameraChange);
 // Socket Code
 
 socket.on("welcome", async () => {
+  myDataChannel = myPeerConnection.createDataChannel("chat");
+  myDataChannel.addEventListener("message", (event) => { console.log(event.data) })
+  console.log("made data channel")
   const offer = await myPeerConnection.createOffer();
   myPeerConnection.setLocalDescription(offer)
   console.log("sent the offer")
@@ -132,6 +136,10 @@ socket.on("welcome", async () => {
 })
 
 socket.on("offer", async offer => {
+  myPeerConnection.addEventListener("datachannel", event => {
+    myDataChannel = event.channel;
+    myDataChannel.addEventListener("message", (event) => { console.log(event.data) })
+  })
   console.log("received the offer")
   myPeerConnection.setRemoteDescription(offer);
   const answer = await myPeerConnection.createAnswer();
@@ -177,7 +185,7 @@ function handleIce(data) {
   socket.emit("ice", data.candidate, roomName)
 }
 
-function handleAddStream(data){
+function handleAddStream(data) {
   // console.log("got an event from my peer")
   // console.log("Peer's Stream",data.stream);
   // console.log("myStream", myStream);
